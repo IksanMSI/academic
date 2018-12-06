@@ -3,13 +3,16 @@
 	<data>		
 		<record id="action_course_list" model="ir.actions.act_window">
 			<field name="name">Course List</field>
+            <field name="type">ir.actions.act_window</field>
 			<field name="res_model">academic.course</field>
-			<field name="view_mode">tree, form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_type">form</field>
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">Click to add a Course</p>
 				<p>Klik the Create button to add a new Course</p>
 			</field>
 		</record>
+
 		<record id="action_session_list" model="ir.actions.act_window">
 			<field name="name">Session List</field>
 			<field name="res_model">academic.session</field>

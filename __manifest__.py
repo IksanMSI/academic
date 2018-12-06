@@ -8,9 +8,9 @@
 	"data": [
 		"menu.xml",
 		"course.xml",
-		"session.xml",
-		"attendee.xml",
-		"partner.xml"
+		# "session.xml",
+		# "attendee.xml",
+		# "partner.xml"
 	],
 	"installable": True,
 	"auto_install": False,

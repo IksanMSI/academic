@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<odoo>
+	<data>
+		<!-- ini definisi form session-->
+		<record id="session_form" model="ir.ui.view">
+			<field name="name">session_form</field>
+			<field name="model">academic.session</field>
+
+			<field name="arch" type="xml">
+				<form string="Session Form" version="11.00">
+					<sheet>
+						<div class="oe_title">
+							<label for="name" class="oe_edit_only" string="Session Name" />
+							<h1>
+								<field name="name" />
+							</h1>
+						</div>
+
+						<group>
+							<group>
+								<field name="course_id" />
+								<field name="instructor_id" />
+								<field name="start_date" />
+							</group>
+							<group>
+								<field name="duration" />
+								<field name="seats" />
+								<field name="active" />
+							</group>
+						</group>
+
+						<notebook>
+							<page string="Attendees">
+								<field name="attendee_ids">
+									<tree string="Attendee">
+										<field name="name"/>
+										<field name="partner_id"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+
+			</field>
+
+		</record>
+
+		<!-- ini definisi tree session-->
+		<record id="session_list" model="ir.ui.view">
+			<field name="name">session_list</field>
+			<field name="model">academic.session</field>
+
+			<field name="arch" type="xml">
+				<tree string="Session List">
+					<field name="name" />
+					<field name="course_id" />
+					<field name="instructor_id" domain="[('is_instructor','=',True)]" />
+					<field name="start_date" />
+					<field name="duration" />
+					<field name="seats" />
+					<field name="active" />
+				</tree>
+			</field>
+
+		</record>
+	</data>
+</odoo>

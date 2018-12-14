@@ -11,5 +11,17 @@
 				</field>
 			</field>
 		</record>
+
+		<!-- tambahi filter instructor -->
+		<record id="view_res_partner_filter2" model="ir.ui.view">
+			<field name="name">res.partner.select2</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_res_partner_filter" />
+			<field name="arch" type="xml">
+				<search string="Search Partner">
+					<filter string="Instructors" name="instructor" domain="['|',('is_instructor','=',True),('category_id','=','Pelatih')]" help="Instructors Partner" />
+				</search>
+			</field>
+		</record>		
 	</data>
 </odoo>

@@ -4,7 +4,7 @@
 	"depends": ["base"],
 	"author": "Iksan",
 	"category": "Education",
-	"description": """\this is my academic information system module""",
+	"description": """this is my academic information system module""",
 	"data": [
 		"menu.xml",
 		"course.xml",

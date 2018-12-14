@@ -22,7 +22,10 @@
 							</group>
 							<group>
 								<field name="duration" />
-								<field name="seats" on_change="onchange_seats(seats, attendee_ids)" />
+								<!--
+								<field name="seats" on_change="_onchange_seats(seats, attendee_ids)" />
+								-->
+								<field name="seats" />
 								<field name="active" />
 								<field name="taken_seats" widget="progressbar"/>
 							</group>

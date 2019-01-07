@@ -27,6 +27,7 @@
 							<page string="Sessions">
 								<field name="session_ids">
 									<tree string="Sessions">
+									<!--<tree editable="bottom">-->	
 										<field name="name"/>
 										<field name="start_date"/>
 										<field name="instructor_id"/>

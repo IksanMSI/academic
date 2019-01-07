@@ -1,10 +1,11 @@
 {
 	"name": "Academic Information System",
-	"version": "1.0",
+	"version": "11",
 	"depends": ["base"],
 	"author": "Iksan",
 	"category": "Education",
 	"description": """this is my academic information system module""",
+	"demo": [],
 	"data": [
 		"menu.xml",
 		"course.xml",

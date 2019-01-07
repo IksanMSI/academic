@@ -1,5 +1,7 @@
 from odoo import models, fields, api
 
+SESSION_STATES = [('draft','Draft'),('confirmed','Confirmed'),('done','Done')]
+
 class session(models.Model):
 	_name = 'academic.session'
 
@@ -62,7 +64,7 @@ class session(models.Model):
 
 	#_constraints = [(_cek_instruktur, 'Instructor cannot be Attendee', ['instructor_id', 'attendee_ids'])]
 
-	course_id = fields.Many2one('academic.course', string='Course')
+	course_id = fields.Many2one('academic.course', string='Course', required=True)
 	instructor_id = fields.Many2one('res.partner', string='Instructor')
 	name = fields.Char(string='Name', size=100, required=True)
 	start_date = fields.Date(string='Start Date', default=fields.Date.today, required=True)
@@ -72,6 +74,8 @@ class session(models.Model):
 	attendee_ids = fields.One2many('academic.attendee','session_id',string='Attendees', ondelete="cascade")
 	#taken_seats = fields.function(_calc_taken_seats, type='float', string='Taken Seats')
 	taken_seats = fields.Float(string='Taken Seats', compute='_calc_taken_seats')
+	image_small = fields.Binary(string='Image Small')
+	state = fields.Selection(SESSION_STATES,string='Status',readonly=True,required=True, default=SESSION_STATES[0][0])
 
 	@api.depends('seats', 'attendee_ids')
 	def _calc_taken_seats(self):
@@ -101,13 +105,45 @@ class session(models.Model):
 				},
 			}
 
-	@api.constrains('instructor_id', 'attendee_ids')
-	def _cek_instruktur(self):
-		for r in self:
-			if r.instructor_id and r.instructor_id in r.attendee_ids:
-				raise ValidationError("Instructor cannot be Attendee")
+	#@api.constrains('instructor_id', 'attendee_ids')
+	#def _cek_instruktur(self):
+	#	for r in self:
+	#		if r.attendee_ids:
+	#			if r.instructor_id and r.instructor_id in r.attendee_ids:
+	#				raise ValidationError("Instructor cannot be Attendee")
+
+	#def copy(self, cr, uid, id, defaults, context=None)
+	#	prev_session = self.browse(cr, uid, id, context=context)
+	#	prev_name = prev_session.name
+	#	defaults['name'] = 'Copy of %s' % prev_name
+	#	new_session = super(session, self).copy(cr, uid, id, defaults, context=context)
+	#	return new_session
+
+	@api.one
+	@api.returns('self', lambda value: value.id)
+	def copy(self, default=None):
+		default = dict(default or {})
+		default.update({
+	 		'name': 'Copy of %s' % (self.name),
+		})
+		return super(session, self).copy(default)
+
+	@api.one
+	def action_draft(self):
+		#set to draft state
+		return self.update({'state': SESSION_STATES[0][0]})
+
+	@api.one
+	def action_confirm(self):
+		#set to confirm state
+		return self.update({'state': SESSION_STATES[1][0]})
+
+	@api.one
+	def action_done(self):
+		#set to done state
+		return self.update({'state': SESSION_STATES[2][0]})
 
 	_sql_constraints = [
 		('name_description_check', 'CHECK(name <> description)', 'The title of the course should be different of the description'),
-		('name_unique', 'UNIQUE(name)', 'The title must be unique'),
+		('name_unique', 'UNIQUE(name)', 'The title must be unique')
 		]

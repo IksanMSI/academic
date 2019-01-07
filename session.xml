@@ -1,12 +1,101 @@
 <?xml version="1.0"?>
 <odoo>
 	<data>
+		<!--session kanban-->
+		<record id="view_session_kanban" model="ir.ui.view">
+			<field name="name">session.kanban</field>
+			<field name="model">academic.session</field>
+			<field name="arch" type="xml">
+				<kanban default_group_by="course_id">
+					<!--<templates>
+						<t t-name="kanban-box">
+							<div t-attf-class="oe_kanban_vignette">
+								<a type="open">
+									<img t-att-src="kanban_image('academic.session','image_small', record.id.value)" class="oe_kanban_image"/>
+								</a>
+								<div class="oe_kanban_details">
+									<h4>
+										<a type="open"><field name="name"/></a>
+									</h4>
+									<ul>
+										<li>
+											Seats : <field name="seats"></field>
+										</li>
+										<li>
+											Taken Seats : <field name="taken_seats"></field>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</t>
+					</templates>-->
+				</kanban>
+			</field>
+		</record>
+
+		<!--session graph-->
+		<record id="view_session_graph" model="ir.ui.view">
+			<field name="name">session.graph</field>
+			<field name="model">academic.session</field>
+			<field name="arch" type="xml">
+				<graph string="Session" type="bar">
+					<field name="instructor_id"/>
+					<field name="seats" operator="+"/>
+				</graph>
+			</field>
+		</record>
+
+		<!--session gantt-->
+		<record id="view_session_gantt" model="ir.ui.view">
+			<field name="name">session.gantt</field>
+			<field name="model">academic.session</field>
+			<field name="arch" type="xml">
+				<gantt date_delay="duration" date_start="start_date" string="Session" default_group_by="course_id">
+				</gantt>
+			</field>
+		</record>
+
+		<!-- ini definisi search session-->
+		<record id="view_session_filter" model="ir.ui.view">
+			<field name="name">session.filter</field>
+			<field name="model">academic.session</field>
+			<field name="arch" type="xml">
+				<search string="Search Course">
+					<filter icon="terp-mail-message-new" string="Non zero duration" name="Nonzero" domain="[('duration','>',0)]"/>
+					<separator />
+					<field name="instructor_id"/>
+					<field name="name"/>
+					<group expand="0" string="Group by...">
+						<filter string="Course" icon="terp-personal" domain="[]" context="{'group_by':'course_id'}"/>
+						<filter string="Start Date" icon="terp-personal" domain="[]" context="{'group_by':'start_date'}"/>
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<!-- ini definisi calendar session-->
+		<record id="session_calendar" model="ir.ui.view">
+			<field name="name">session.calendar</field>
+			<field name="model">academic.session</field>
+			<field name="arch" type="xml">
+				<calendar string="Session" date_start="start_date" color="course_id">
+					<field name="name" />
+				</calendar>
+			</field>
+		</record>
+
 		<!-- ini definisi form session-->
 		<record id="session_form" model="ir.ui.view">
 			<field name="name">session_form</field>
 			<field name="model">academic.session</field>
 			<field name="arch" type="xml">
 				<form string="Session Form" version="7.00">
+					<header>
+						<button string="Confirm" type="object" name="action_confirm" states="draft" />
+						<button string="Mark as Done" type="object" name="action_done" states="confirmed" />
+						<button string="Reset to Draft" type="object" name="action_draft" states="confirmed,done" />
+						<field name="state" widget="statusbar" />
+					</header>
 					<sheet>
 						<div class="oe_title">
 							<label for="name" class="oe_edit_only" string="Session Name" />
@@ -16,9 +105,12 @@
 						</div>
 						<group>
 							<group>
-								<field name="course_id" />
+								<field name="course_id" >
+									<field name="name"/>
+								</field>
 								<field name="instructor_id" domain="['|',('is_instructor','=',True),('category_id','=','Pelatih')]" />
 								<field name="start_date" />
+								<field name="image_small" widget="image" class="oe_left_oe_avatar" />
 							</group>
 							<group>
 								<field name="duration" />
@@ -53,7 +145,8 @@
 			<field name="model">academic.session</field>
 
 			<field name="arch" type="xml">
-				<tree string="Session List">
+				<tree string="Session List" decoration-warning="taken_seats&lt;20" decoration-danger="taken_seats&gt;50">
+				<!--<tree string="Session List">-->
 					<field name="name" />
 					<field name="course_id" />
 					<field name="instructor_id" domain="['|',('is_instructor','=',True),('category_id','=','Pelatih')]" />
